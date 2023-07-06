@@ -58,7 +58,6 @@ export const AuthProvider = ({ children }: { children: JSX.Element | JSX.Element
 
     try {
       const { data } = await apiCafe.post<RegisterResponse>('/usuarios', { correo, nombre, password });
-      console.log({ data });
       dispatch({ type: 'signUp', payload: { token: data.token, user: data.usuario } });
     } catch (error) {
       dispatch({type: 'addError', payload: error.response.data.errors[0].msg || 'Redise la información'});

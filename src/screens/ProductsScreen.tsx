@@ -1,15 +1,17 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from 'react-native';
 import { ProductContext } from '../context/product/ProductContext';
 import { Producto } from '../context/product/types';
 import { StackScreenProps } from '@react-navigation/stack';
 import { ProductNavigatorScreens, ProductsStackParam } from '../navigator/ProductsNavigator';
 import Icon from 'react-native-vector-icons/Ionicons';
+import { RefreshControl } from 'react-native-gesture-handler';
 
 interface Props extends StackScreenProps<ProductsStackParam, ProductNavigatorScreens.PRODUCTSSCREEN> { }
 
 const ProductsScreen = ({ navigation } : Props) => {
   const { products, loadProducts } = useContext(ProductContext);
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const renderItem = (item: Producto) => (
     <TouchableOpacity
@@ -45,6 +47,12 @@ const ProductsScreen = ({ navigation } : Props) => {
     });
   }, []);
 
+  const pullToRefresh = async () => {
+    setIsRefreshing(true);
+    await loadProducts();
+    setIsRefreshing(false);
+  };
+
 
   //TODO PULL TO REFRESH
 
@@ -65,7 +73,13 @@ const ProductsScreen = ({ navigation } : Props) => {
         data={products}
         keyExtractor={(item) => item._id}
         numColumns={2}
-        renderItem={({item}) => renderItem(item)}
+        renderItem={({ item }) => renderItem(item)}
+        refreshControl={
+          <RefreshControl
+            refreshing={isRefreshing}
+            onRefresh={ pullToRefresh }
+          />
+        }
        />
     </View>
   );

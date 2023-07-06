@@ -10,7 +10,7 @@ export enum ProductNavigatorScreens {
 
 export type ProductsStackParam = {
   [ProductNavigatorScreens.PRODUCTSSCREEN]: undefined,
-  [ProductNavigatorScreens.PRODUCTSCREEN]: { id? : number, name? : string}
+  [ProductNavigatorScreens.PRODUCTSCREEN]: { id? : string, name? : string}
 }
 
 const Stack = createStackNavigator<ProductsStackParam>();
