@@ -5,25 +5,28 @@ import { StackScreenProps } from '@react-navigation/stack';
 enum AuthStackScreens {
   LOGIN = 'Login',
   SIGNIN = 'SignIn',
+  MAINSCREEN = 'MainScreen',
+  PRODUCTSNAVIGATOR = 'ProductsNavigator',
 }
 
 // * Screen params declaration
 type AuthStackParamList = {
   [AuthStackScreens.LOGIN]: {};
   [AuthStackScreens.SIGNIN]: {};
+  [AuthStackScreens.MAINSCREEN]: {};
+  [AuthStackScreens.PRODUCTSNAVIGATOR]: {};
 }
+
 
 /** MAIN STACK SCREENS & PARAM LIST **/
 
 // * Screens declaration
 enum MainStackScreens {
-  HOMESCREEN = 'HomeScreen',
 
 }
 
 // * Screen params declaration
 type MainStackParamList = {
-  [MainStackScreens.HOMESCREEN]: {};
 
 }
 

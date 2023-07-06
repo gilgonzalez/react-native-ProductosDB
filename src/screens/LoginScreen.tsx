@@ -1,15 +1,16 @@
-import React from 'react';
-import { Text, TextInput, Platform, View, TouchableOpacity, KeyboardAvoidingView, Keyboard } from 'react-native';
+import React, { useContext, useEffect } from 'react';
+import { Text, TextInput, Platform, View, TouchableOpacity, KeyboardAvoidingView, Keyboard, Alert } from 'react-native';
 import Background from '../components/Background';
 import WhiteLogo from '../components/WhiteLogo';
 import { loginTheme } from '../theme/loginTheme';
 import { useForm } from '../hook/useForm';
 import { StackScreenProps } from '@react-navigation/stack';
 import { AuthStackParamList, AuthStackScreens } from '../navigator/types';
+import { AuthContext } from '../context/auth/AuthContext';
 
 const initialForm = {
-  email: '',
-  password: '',
+  email: 'fragilgon@gmail.com',
+  password: '123456',
 };
 
 interface Props extends StackScreenProps<AuthStackParamList, AuthStackScreens.LOGIN> {
@@ -19,11 +20,20 @@ interface Props extends StackScreenProps<AuthStackParamList, AuthStackScreens.LO
 const LoginScreen = ({ navigation } : Props) => {
 
   const { email, password, onChange } = useForm(initialForm);
+  const { signUp, errorMessage, clearErrorMessage } = useContext(AuthContext);
 
   const onLogin = () => {
-    console.log({email, password});
+    signUp({ correo: email, password });
     Keyboard.dismiss();
   };
+
+  useEffect(() => {
+    if (errorMessage.length === 0) {return;}
+    Alert.alert('Login Error', errorMessage, [{ text: 'Ok', onPress: clearErrorMessage }]);
+  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  , [errorMessage]);
+
 
   return (
     <>
@@ -58,10 +68,7 @@ const LoginScreen = ({ navigation } : Props) => {
             onChangeText={(value) => onChange(value, 'email')}
             onSubmitEditing={onLogin}
           />
-          <Text
-            style={ loginTheme.title}
-          >Password
-          </Text>
+
           <Text style={ loginTheme.label}>Password : </Text>
           <TextInput
             secureTextEntry

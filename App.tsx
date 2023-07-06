@@ -3,29 +3,26 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { AuthStack } from './src/navigator/Navigator';
 import { ThemeProvider } from './src/context/theme/ThemeContext';
-import TabAndroid from './src/navigator/BottomTabNavigator';
 import { AuthProvider } from './src/context/auth/AuthContext';
+import { ProductProvider } from './src/context/product/ProductContext';
 
 const AppAuthState = ({ children }: { children: JSX.Element | JSX.Element[] }) => {
 
   return (
     <AuthProvider>
-      {children}
+      <ProductProvider>
+        {children}
+      </ProductProvider>
     </AuthProvider>
   );
 };
 
 const App = () => {
-  const user = true;
   return (
     <NavigationContainer>
       <AppAuthState>
         <ThemeProvider>
-          {
-            user
-              ? <AuthStack />
-              : <TabAndroid />
-          }
+          <AuthStack/>
         </ThemeProvider>
       </AppAuthState>
     </NavigationContainer>

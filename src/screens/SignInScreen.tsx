@@ -1,11 +1,12 @@
-import React from 'react';
-import { Keyboard, KeyboardAvoidingView, Platform, TextInput, TouchableOpacity } from 'react-native';
+import React, { useContext, useEffect } from 'react';
+import { Alert, Keyboard, KeyboardAvoidingView, Platform, TextInput, TouchableOpacity } from 'react-native';
 import { View, Text } from 'react-native';
 import WhiteLogo from '../components/WhiteLogo';
 import { AuthStackParamList, AuthStackScreens } from '../navigator/types';
 import { loginTheme } from '../theme/loginTheme';
 import { StackScreenProps } from '@react-navigation/stack';
 import { useForm } from '../hook/useForm';
+import { AuthContext } from '../context/auth/AuthContext';
 
 
 interface Props extends StackScreenProps<AuthStackParamList, AuthStackScreens.SIGNIN> {
@@ -20,11 +21,19 @@ const initialForm = {
 const SignInScreen = ({ navigation }: Props) => {
 
   const { email, name, password, onChange } = useForm(initialForm);
+  const { signIn, errorMessage, clearErrorMessage } = useContext(AuthContext);
 
   const onRegister = () => {
-    console.log({email, password, name});
+    signIn({ correo: email, password, nombre : name });
     Keyboard.dismiss();
   };
+
+  useEffect(() => {
+    if (errorMessage.length === 0) {return;}
+    Alert.alert('No se ha podido realizar la creacion de la cuenta', errorMessage, [{ text: 'Ok', onPress: clearErrorMessage }]);
+  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  , [errorMessage]);
   return (
     <>
       <KeyboardAvoidingView
@@ -69,10 +78,6 @@ const SignInScreen = ({ navigation }: Props) => {
             onChangeText={(value) => onChange(value, 'email')}
             onSubmitEditing={onRegister}
           />
-          <Text
-            style={ loginTheme.title}
-          >Password
-          </Text>
           <Text style={ loginTheme.label}>Password : </Text>
           <TextInput
             secureTextEntry
